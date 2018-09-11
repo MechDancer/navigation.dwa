@@ -3,7 +3,6 @@ package org.mechdancer.navigation.dwa
 import org.mechdancer.navigation.dwa.process.functions.descartes
 import org.mechdancer.navigation.dwa.process.functions.div
 import org.mechdancer.navigation.dwa.process.functions.times
-import kotlin.math.PI
 import kotlin.math.absoluteValue
 import kotlin.math.max
 
@@ -18,14 +17,14 @@ import kotlin.math.max
  * @param angularRateSampleCount 角速度采样点数量
  */
 data class Configuration(
-	val period: Double = 0.1,
-	val interestAreaRadius: Double = 1.0,
-	val speedWindow: ClosedFloatingPointRange<Double> = -0.5..0.5,
-	val angularRateWindow: ClosedFloatingPointRange<Double> = -PI / 4..PI / 4,
-	val accelerationLimit: Double = 0.1,
-	val angularAccelerationLimit: Double = 0.1,
-	val speedSampleCount: Int = 3,
-	val angularRateSampleCount: Int = 3
+	val period: Double,
+	val interestAreaRadius: Double,
+	val speedWindow: ClosedFloatingPointRange<Double>,
+	val angularRateWindow: ClosedFloatingPointRange<Double>,
+	val accelerationLimit: Double,
+	val angularAccelerationLimit: Double,
+	val speedSampleCount: Int,
+	val angularRateSampleCount: Int
 ) {
 	private companion object {
 		fun maxAbs(range: ClosedFloatingPointRange<Double>) =
