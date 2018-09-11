@@ -10,7 +10,7 @@ import kotlin.math.absoluteValue
 import kotlin.math.log2
 
 /** 速度样点 */
-internal typealias Sample = Pair<Double, Double>
+typealias Sample = Pair<Double, Double>
 
 /** 条件包括系数和价值函数 */
 class Condition(val k: Double, val f: (Trajectory, Sample, Trajectory) -> Double)
@@ -56,7 +56,7 @@ internal fun optimize(
 	{ condition, speed ->
 		condition.f(local, speed, Trajectory(current, speed, 1.0, 5))
 	}
-	//按列计算归一化系数
+	//按行计算归一化系数
 	val normalizer =
 		table.rows.associate { condition ->
 			condition to table.row(condition).values.sum()

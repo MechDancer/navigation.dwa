@@ -10,7 +10,7 @@ import kotlin.math.sign
 import kotlin.math.sin
 
 /**
- * 轨迹 := <速率样点, 路点列表, 线段列表>
+ * 轨迹 := <路点列表, 线段列表>
  * @param nodes 路点列表
  */
 class Trajectory(val nodes: List<Pose>) {
@@ -29,6 +29,7 @@ class Trajectory(val nodes: List<Pose>) {
 	constructor(source: Pose, speed: Sample, time: Double, sample: Int)
 		: this(poseSeq(source, speed, time, sample).toList())
 
+	/** 通过差分位置获取线段列表 */
 	val segments by lazy {
 		(0 until nodes.size - 1)
 			.map { LineSegment(nodes[it].position, nodes[it + 1].position) }

@@ -17,9 +17,16 @@ import java.util.*
  */
 class Path(list: List<Pose>) {
 	private val _list = LinkedList(list)
-	val list get() = _list.toList()
-	val size = list.size
 
+	/** 获取剩余路径 */
+	val list get() = _list.toList()
+
+	/** 在尾部添加新位姿 */
+	operator fun plusAssign(pose: Pose) {
+		_list.add(pose)
+	}
+
+	/** 获取工作区路径，并丢弃已超出工作区的位姿 */
 	operator fun get(area: Area): Trajectory? {
 		//出区舍尾
 		while (_list.isNotEmpty() && !(_list.first().position inside area))
