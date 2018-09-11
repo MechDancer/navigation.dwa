@@ -21,3 +21,7 @@ operator fun ClosedFloatingPointRange<Double>.div(t: Int): List<Double> {
 	val step = (endInclusive - start) / (t - 1) //步长
 	return List(t) { i -> start + i * step }
 }
+
+/** 求两离散集合的笛卡尔积 */
+internal infix fun <A, B> Set<A>.descartes(other: Set<B>) =
+	flatMap { a -> other.map { b -> a to b } }.toSet()

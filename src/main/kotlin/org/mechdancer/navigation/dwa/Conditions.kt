@@ -1,15 +1,16 @@
 package org.mechdancer.navigation.dwa
 
-import org.mechdancer.navigation.dwa.process.Sample
 import org.mechdancer.navigation.dwa.process.Trajectory
 import org.mechdancer.navigation.dwa.process.TypedTable
 import org.mechdancer.navigation.dwa.process.functions.Pose
 import org.mechdancer.navigation.dwa.process.functions.deflectionTo
-import org.mechdancer.navigation.dwa.process.functions.distanceTo
+import org.mechdancer.navigation.dwa.process.functions.euclid
 import org.mechdancer.navigation.dwa.process.functions.position
-import org.mechdancer.navigation.dwa.process.trajectory
 import kotlin.math.absoluteValue
 import kotlin.math.log2
+
+/** 速度样点 */
+internal typealias Sample = Pair<Double, Double>
 
 /** 条件包括系数和价值函数 */
 class Condition(val k: Double, val f: (Trajectory, Sample, Trajectory) -> Double)
@@ -17,7 +18,7 @@ class Condition(val k: Double, val f: (Trajectory, Sample, Trajectory) -> Double
 private val conditions = setOf(
 	//终端位置条件
 	Condition(1.0) { local, _, trajectory ->
-		local.nodes.last() distanceTo trajectory.nodes.last()
+		local.nodes.last() euclid trajectory.nodes.last()
 	},
 	//终端方向条件
 	Condition(1.0) { local, _, trajectory ->
@@ -53,7 +54,7 @@ internal fun optimize(
 	//条件-速率样点表 := (条件 × 速率样点) -> 价值
 	val table = TypedTable(conditions, speeds)
 	{ condition, speed ->
-		condition.f(local, speed, trajectory(current, speed, 1.0, 5))
+		condition.f(local, speed, Trajectory(current, speed, 1.0, 5))
 	}
 	//按列计算归一化系数
 	val normalizer =

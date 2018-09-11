@@ -9,4 +9,11 @@ import org.mechdancer.navigation.dwa.process.functions.Point
 interface Area {
 	/** 判断区域内是否有某点 */
 	fun contain(point: Point): Boolean
+
+	companion object {
+		/** 从谓词构造区域 */
+		fun area(predicate: (Point) -> Boolean) = object : Area {
+			override fun contain(point: Point) = predicate(point)
+		}
+	}
 }

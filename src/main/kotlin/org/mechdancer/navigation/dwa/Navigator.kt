@@ -1,10 +1,8 @@
 package org.mechdancer.navigation.dwa
 
-import org.mechdancer.navigation.dwa.process.*
-import org.mechdancer.navigation.dwa.process.functions.Pose
-import org.mechdancer.navigation.dwa.process.functions.div
-import org.mechdancer.navigation.dwa.process.functions.position
-import org.mechdancer.navigation.dwa.process.functions.times
+import org.mechdancer.navigation.dwa.process.Area.Companion.area
+import org.mechdancer.navigation.dwa.process.Path
+import org.mechdancer.navigation.dwa.process.functions.*
 
 /**
  * 导航器
@@ -31,7 +29,7 @@ internal class Navigator(private val path: Path) {
 		pose: Pose
 	): Sample? {
 		//局部规划范围
-		val local = path[area { it distanceTo pose.position < interestAreaRadius }] ?: return null
+		val local = path[area { it euclid pose.position < interestAreaRadius }] ?: return null
 		//可能轨迹样点
 		val speedList = (current.dynamic.first * windows.first) / speedSampleCount
 		val angularRateList = (current.dynamic.second * windows.second) / angularRateSampleCount
