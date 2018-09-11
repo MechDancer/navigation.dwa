@@ -25,9 +25,20 @@ class Path(list: List<Pose> = listOf()) {
 	/** 获取工作区路径，并丢弃已超出工作区的位姿 */
 	operator fun get(area: Area): Trajectory? {
 		//出区舍尾
-		while (_list.firstOrNull()?.takeIf { it.position inside area } != null)
+		while (_list.firstOrNull()?.takeUnless { it.position inside area } != null)
 			_list.remove()
 		val local = _list.takeWhile { it.position inside area }
 		return if (local.size < 2) null else Trajectory(local)
+	}
+
+	/** 清空路径 */
+	fun clear() {
+		_list.clear()
+	}
+
+	/** 加载新路径 */
+	fun load(list: List<Pose>) {
+		_list.clear()
+		_list.addAll(list)
 	}
 }
