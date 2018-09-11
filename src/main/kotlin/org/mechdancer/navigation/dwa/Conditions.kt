@@ -1,8 +1,18 @@
 package org.mechdancer.navigation.dwa
 
-import org.mechdancer.navigation.dwa.process.*
+import org.mechdancer.navigation.dwa.process.Sample
+import org.mechdancer.navigation.dwa.process.Trajectory
+import org.mechdancer.navigation.dwa.process.TypedTable
+import org.mechdancer.navigation.dwa.process.functions.Pose
+import org.mechdancer.navigation.dwa.process.functions.deflectionTo
+import org.mechdancer.navigation.dwa.process.functions.distanceTo
+import org.mechdancer.navigation.dwa.process.functions.position
+import org.mechdancer.navigation.dwa.process.trajectory
 import kotlin.math.absoluteValue
 import kotlin.math.log2
+
+/** 条件包括系数和价值函数 */
+class Condition(val k: Double, val f: (Trajectory, Sample, Trajectory) -> Double)
 
 private val conditions = setOf(
 	//终端位置条件
@@ -36,7 +46,7 @@ private val conditions = setOf(
  */
 internal fun optimize(
 	local: Trajectory,
-	current: Node,
+	current: Pose,
 	speeds: Set<Pair<Double, Double>>
 ): Pair<Double, Double> {
 	//轨迹集 = { 速率样点 -> 轨迹 }

@@ -1,48 +1,29 @@
 package org.mechdancer.navigation.dwa.process
 
+import org.mechdancer.algebra.vector.Axis3D.X
+import org.mechdancer.algebra.vector.Axis3D.Y
+import org.mechdancer.algebra.vector.Vector
+import org.mechdancer.algebra.vector.impl.Vector2D.Companion.to2D
+import org.mechdancer.navigation.dwa.process.functions.*
 import kotlin.math.*
-
-/** 二维向量可以用于表示点 */
-internal typealias Point = Vector
 
 /** 速度样点 */
 internal typealias Sample = Pair<Double, Double>
 
-/** 条件包括系数和价值函数 */
-internal class Condition(val k: Double, val f: (Trajectory, Sample, Trajectory) -> Double)
+/** 求方向向量 */
+val Vector.unit get() = this / norm()
+
+/** 两点（欧几里得）距离 */
+infix fun Vector.distanceTo(other: Vector) = (this - other).norm()
 
 /** 弧度转方向向量 */
-internal val Double.vector get() = Vector(cos(this), sin(this))
-
-//区间运算======================================================================
-/** 并集 */
-internal operator fun ClosedFloatingPointRange<Double>.plus(other: ClosedFloatingPointRange<Double>) =
-	min(start, other.start)..max(endInclusive, other.endInclusive)
-
-/** 交集 */
-internal operator fun ClosedFloatingPointRange<Double>.times(other: ClosedFloatingPointRange<Double>) =
-	max(start, other.start)..min(endInclusive, other.endInclusive)
-
-/**
- * 等分区间
- * @return 等分点（包括两端点）
- */
-internal operator fun ClosedFloatingPointRange<Double>.div(t: Int): List<Double> {
-	assert(start < endInclusive)
-	assert(t >= 2)
-	val step = (endInclusive - start) / (t - 1) //步长
-	return List(t) { i -> start + i * step }
-}
+internal val Double.vector get() = Point(cos(this), sin(this))
 
 //构造或变换======================================================================
 /** 从谓词构造区域 */
 internal fun area(predicate: (Point) -> Boolean) = object : Area {
 	override fun contain(point: Point) = predicate(point)
 }
-
-/** 从端点构造线段 */
-internal val Pair<Point, Point>.segment
-	get() = LineSegment(first, second)
 
 /**
  * 距离计算
@@ -87,7 +68,7 @@ internal tailrec fun Double.adjust(): Double =
  * @return 轨迹弧上等间隔的采样点
  */
 internal fun trajectory(
-	source: Node,
+	source: Pose,
 	speed: Sample,
 	time: Double,
 	sample: Int
@@ -102,12 +83,15 @@ internal fun trajectory(
 			length / (sample - 1)
 		else
 			length.sign * abs(2 * (length / angle) * sin(subAngle / 2))
-	val build = { last: Node -> Node(last.position + last.w.vector.rotate(subAngle / 2) * subLength, last.w + subAngle) }
+	val build = { last: Pose ->
+		val position = to2D(last.position + last.direction.rotate(subAngle / 2) * subLength)
+		Pose(position[X], position[Y], last.w + subAngle)
+	}
 	//初向量
 	var variable = source
 	var i = 0
 	val list = Sequence {
-		object : Iterator<Node> {
+		object : Iterator<Pose> {
 			override fun next() = build(variable)
 				.also {
 					++i
@@ -118,8 +102,4 @@ internal fun trajectory(
 		}
 	}.toList()
 	return Trajectory(list)
-}
-
-fun main(args: Array<String>) {
-	(setOf(1, 2, 3) descartes setOf(4, 5, 6)).forEach(::println)
 }

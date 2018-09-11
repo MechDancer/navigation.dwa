@@ -1,6 +1,10 @@
 package org.mechdancer.navigation.dwa
 
 import org.mechdancer.navigation.dwa.process.*
+import org.mechdancer.navigation.dwa.process.functions.Pose
+import org.mechdancer.navigation.dwa.process.functions.div
+import org.mechdancer.navigation.dwa.process.functions.position
+import org.mechdancer.navigation.dwa.process.functions.times
 
 /**
  * 导航器
@@ -20,23 +24,20 @@ internal class Navigator(private val path: Path) {
 	/**
 	 * 导航
 	 * @param current 当前速度
-	 * @param node    当前位姿
+	 * @param pose    当前位姿
 	 */
 	operator fun invoke(
 		current: Sample,
-		node: Node
+		pose: Pose
 	): Sample? {
 		//局部规划范围
-		val local = path[area { p ->
-			val distance = p distanceTo node.position
-			distance < interestAreaRadius
-		}] ?: return null
+		val local = path[area { it distanceTo pose.position < interestAreaRadius }] ?: return null
 		//可能轨迹样点
 		val speedList = (current.dynamic.first * windows.first) / speedSampleCount
 		val angularRateList = (current.dynamic.second * windows.second) / angularRateSampleCount
 		//最优化
 		//速率样点集 = {线速度样点集 × 角速度样点集}
-		return optimize(local, node, speedList.toSet() descartes angularRateList.toSet())
+		return optimize(local, pose, speedList.toSet() descartes angularRateList.toSet())
 	}
 
 	private companion object {

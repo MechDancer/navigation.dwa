@@ -11,10 +11,12 @@ version = "1.0-SNAPSHOT"
 repositories {
 	maven { setUrl("http://dl.bintray.com/kotlin/kotlin-eap") }
 	mavenCentral()
+	jcenter()
 }
 
 dependencies {
 	compile(kotlin("stdlib-jdk8"))
+	compile("org.mechdancer:linearalgebra:0.1.0")
 	testCompile("junit", "junit", "4.12")
 }
 

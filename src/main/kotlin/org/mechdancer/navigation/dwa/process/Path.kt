@@ -1,5 +1,8 @@
 package org.mechdancer.navigation.dwa.process
 
+import org.mechdancer.navigation.dwa.process.functions.Pose
+import org.mechdancer.navigation.dwa.process.functions.inside
+import org.mechdancer.navigation.dwa.process.functions.position
 import java.util.*
 
 /**
@@ -12,7 +15,7 @@ import java.util.*
  * > 不可多线程使用！
  * ****************
  */
-internal class Path(list: List<Node>) {
+class Path(list: List<Pose>) {
 	private val _list = LinkedList(list)
 	val list get() = _list.toList()
 	val size = list.size
@@ -21,7 +24,7 @@ internal class Path(list: List<Node>) {
 		//出区舍尾
 		while (_list.isNotEmpty() && !(_list.first().position inside area))
 			_list.remove()
-		val local = mutableListOf<Node>()
+		val local = mutableListOf<Pose>()
 		for (i in _list.indices) {
 			if (!(_list[i].position inside area)) break
 			local += _list[i]

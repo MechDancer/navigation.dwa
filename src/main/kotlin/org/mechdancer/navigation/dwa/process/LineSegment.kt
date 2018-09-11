@@ -1,23 +1,26 @@
 package org.mechdancer.navigation.dwa.process
 
+import org.mechdancer.algebra.vector.impl.Vector2D
+import org.mechdancer.navigation.dwa.process.functions.Point
+
 /**
  * 线段
  * 提供与某点距离的计算式
  */
-internal class LineSegment(val source: Point, val target: Point) {
+class LineSegment(val source: Point, val target: Point) {
 	/** 连线 */
 	val connection by lazy { target - source }
 
 	/** 与某点距离 */
-	fun distanceTo(point: Point) =
-		((point - source) * connection.unit)
-			.let { shadow ->
-				point distanceTo when {
-					shadow >= connection.norm
-					     -> target
-					shadow <= 0
-					     -> source
-					else -> source + connection.unit * shadow
-				}
-			}
+	fun distanceTo(point: Point): Double {
+		val direction = connection.unit
+		val shadow = (point - source) dot direction
+		return point distanceTo when {
+			shadow >= connection.norm()
+			     -> target
+			shadow <= 0
+			     -> source
+			else -> Vector2D.to2D(source + direction * shadow)
+		}
+	}
 }
