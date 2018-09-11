@@ -119,3 +119,7 @@ internal fun trajectory(
 	}.toList()
 	return Trajectory(list)
 }
+
+fun main(args: Array<String>) {
+	(setOf(1, 2, 3) descartes setOf(4, 5, 6)).forEach(::println)
+}

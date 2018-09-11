@@ -40,24 +40,21 @@ internal fun optimize(
 	speeds: Set<Pair<Double, Double>>
 ): Pair<Double, Double> {
 	//轨迹集 = { 速率样点 -> 轨迹 }
-	val trajectories = speeds.map { it to trajectory(current, it, 1.0, 5) }.toSet()
-	//轨迹-条件表 := (条件 × 轨迹) -> 价值
-	val table = (conditions descartes trajectories).map {
-		it to it.first.f(local, it.second.first, it.second.second)
+	//条件-速率样点表 := (条件 × 速率样点) -> 价值
+	val table = TypedTable(conditions, speeds)
+	{ condition, speed ->
+		condition.f(local, speed, trajectory(current, speed, 1.0, 5))
 	}
 	//按列计算归一化系数
 	val normalizer =
-		conditions
-			.associate {
-				it to table
-					.filter { pair -> pair.first.first == it }
-					.sumByDouble { pair -> pair.second }
-					.let { value -> if (value > 0) it.k / value else .0 }
-			}
+		table.rows.associate { condition ->
+			condition to table.row(condition).values.sum()
+				.let { if (it > 0) condition.k / it else .0 }
+		}
 	//最优化
-	return trajectories.minBy { trajectory ->
-		table
-			.filter { it.first.second == trajectory }.toList()
-			.sumByDouble { it.second * normalizer[it.first.first]!! }
-	}!!.first
+	return table.columns.minBy { speed ->
+		table.column(speed)
+			.toList()
+			.sumByDouble { normalizer[it.first]!! * it.second }
+	}!!
 }
