@@ -16,7 +16,7 @@ repositories {
 
 dependencies {
 	compile(kotlin("stdlib-jdk8"))
-	compile("org.mechdancer:linearalgebra:0.1.0")
+	compile("org.mechdancer:linearalgebra:0.1.1")
 	testCompile("junit", "junit", "4.12")
 }
 

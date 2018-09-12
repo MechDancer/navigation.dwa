@@ -13,4 +13,4 @@ val Vector2D.rad get() = atan2(this[Y], this[X])
 infix fun Vector2D.rotate(angle: Double) = (rad + angle).vector * norm()
 
 /** 两方向向量夹角 */
-infix fun Vector2D.deflectionTo(other: Vector2D) = acos(unit dot other.unit)
+infix fun Vector2D.deflectionTo(other: Vector2D) = acos(normalize() dot other.normalize())
