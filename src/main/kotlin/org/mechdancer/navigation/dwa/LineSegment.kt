@@ -1,8 +1,8 @@
-package org.mechdancer.navigation.dwa.process
+package org.mechdancer.navigation.dwa
 
 import org.mechdancer.algebra.vector.impl.Vector2D
-import org.mechdancer.navigation.dwa.process.functions.Point
-import org.mechdancer.navigation.dwa.process.functions.euclid
+import org.mechdancer.navigation.dwa.functions.Point
+import org.mechdancer.navigation.dwa.functions.euclid
 
 /**
  * 线段

@@ -1,4 +1,4 @@
-package org.mechdancer.navigation.dwa.process.functions
+package org.mechdancer.navigation.dwa.functions
 
 import kotlin.math.max
 import kotlin.math.min

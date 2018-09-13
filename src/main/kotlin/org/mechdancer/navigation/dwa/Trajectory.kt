@@ -1,7 +1,6 @@
-package org.mechdancer.navigation.dwa.process
+package org.mechdancer.navigation.dwa
 
-import org.mechdancer.navigation.dwa.Sample
-import org.mechdancer.navigation.dwa.process.functions.*
+import org.mechdancer.navigation.dwa.functions.*
 import kotlin.math.abs
 import kotlin.math.sign
 import kotlin.math.sin

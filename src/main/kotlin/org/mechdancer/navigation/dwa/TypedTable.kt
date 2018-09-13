@@ -1,6 +1,6 @@
-package org.mechdancer.navigation.dwa.process
+package org.mechdancer.navigation.dwa
 
-import org.mechdancer.navigation.dwa.process.functions.descartes
+import org.mechdancer.navigation.dwa.functions.descartes
 import java.util.*
 
 /**

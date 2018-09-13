@@ -1,8 +1,8 @@
 package org.mechdancer.navigation.dwa
 
-import org.mechdancer.navigation.dwa.process.functions.descartes
-import org.mechdancer.navigation.dwa.process.functions.div
-import org.mechdancer.navigation.dwa.process.functions.times
+import org.mechdancer.navigation.dwa.functions.descartes
+import org.mechdancer.navigation.dwa.functions.div
+import org.mechdancer.navigation.dwa.functions.times
 import kotlin.math.absoluteValue
 import kotlin.math.max
 

@@ -1,4 +1,4 @@
-package org.mechdancer.navigation.dwa.process.functions
+package org.mechdancer.navigation.dwa.functions
 
 import org.mechdancer.algebra.vector.Axis3D.X
 import org.mechdancer.algebra.vector.Axis3D.Y
